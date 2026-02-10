@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ClipEngine | Vaivaanith Ecosystem</title>
+<title>ShortClips | VAI Group</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
 
@@ -15,6 +15,7 @@
 --neu-inset:inset 6px 6px 12px #cbced1,inset -6px -6px 12px #fff;
 }
 
+/* RESET */
 *{margin:0;padding:0;box-sizing:border-box}
 body{
 background:var(--milk);
@@ -23,41 +24,110 @@ color:var(--charcoal);
 overflow-x:hidden;
 }
 
+/* 3D BACKGROUND */
+#canvas-container{
+position:fixed;
+inset:0;
+z-index:-1;
+pointer-events:none;
+}
+
+/* SECTIONS */
 section{
-padding:120px 20px;
+padding:140px 20px;
 max-width:1100px;
 margin:auto;
 text-align:center;
 }
 
+/* REVEAL */
 .reveal{opacity:0;transform:translateY(30px);transition:.8s}
 .reveal.active{opacity:1;transform:none}
 
 /* NAV */
 nav{
-position:fixed;top:20px;left:50%;
+position:fixed;
+top:20px;
+left:50%;
 transform:translateX(-50%);
-width:90%;max-width:1000px;
-padding:15px 30px;
-background:rgba(236,240,243,.5);
-backdrop-filter:blur(15px);
+width:92%;
+max-width:1100px;
+padding:18px 35px;
+background:rgba(236,240,243,.55);
+backdrop-filter:blur(18px);
 border-radius:50px;
-display:flex;justify-content:space-between;
+display:flex;
+justify-content:space-between;
+align-items:center;
 z-index:1000;
+box-shadow:0 12px 30px rgba(0,0,0,.05);
 }
 
-.logo{font-family:'Syne';font-size:20px;font-weight:800}
+.logo{
+font-family:'Syne';
+font-weight:800;
+font-size:20px;
+}
+
 .nav-links a{
-margin-left:20px;
+margin-left:24px;
 text-decoration:none;
-color:black;
 font-size:12px;
 font-weight:600;
+color:black;
+}
+
+/* LOGIN */
+#loginOverlay{
+position:fixed;
+inset:0;
+z-index:2000;
+background:rgba(236,240,243,.6);
+backdrop-filter:blur(25px);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.login-box{
+width:360px;
+padding:45px;
+border-radius:40px;
+background:var(--milk);
+box-shadow:var(--neu-shadow);
+text-align:center;
+}
+
+.login-box h2{
+font-family:'Poppins';
+font-weight:900;
+margin-bottom:25px;
+}
+
+.login-box input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+box-shadow:var(--neu-inset);
+margin-bottom:15px;
+}
+
+.login-box button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:15px;
+background:black;
+color:white;
+font-weight:800;
+cursor:pointer;
 }
 
 /* HERO */
 .hero{
-height:100vh;
+min-height:100vh;
+padding-top:220px; /* FIXED SPACING */
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -65,12 +135,12 @@ justify-content:center;
 
 .hero h1{
 font-family:'Syne';
-font-size:clamp(45px,9vw,90px);
-line-height:.85;
+font-size:clamp(48px,9vw,92px);
+line-height:.9;
 margin-bottom:30px;
 }
 
-/* INPUTS */
+/* INPUT */
 .main-input-box{
 background:var(--milk);
 padding:10px;
@@ -78,7 +148,7 @@ border-radius:25px;
 box-shadow:var(--neu-shadow);
 display:flex;
 max-width:600px;
-margin:auto;
+margin:40px auto 0;
 }
 
 .main-input-box input{
@@ -102,12 +172,12 @@ cursor:pointer;
 /* UPLOAD */
 .upload-box{
 max-width:600px;
-margin:40px auto;
+margin:30px auto 0;
 padding:50px;
 border-radius:35px;
-background:rgba(236,240,243,.7);
+background:rgba(236,240,243,.75);
 box-shadow:var(--neu-shadow);
-border:2px dashed rgba(0,0,0,.15);
+border:2px dashed rgba(0,0,0,.12);
 transition:.3s;
 }
 
@@ -118,7 +188,7 @@ transform:scale(1.02);
 
 .upload-box button{
 margin-top:20px;
-padding:14px 30px;
+padding:14px 32px;
 border-radius:20px;
 border:none;
 background:black;
@@ -127,18 +197,19 @@ cursor:pointer;
 }
 
 /* GRID */
-.grid-4{
+.grid-3{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:30px;
-margin-top:50px;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:40px;
+margin-top:60px;
 }
 
 .card{
-background:rgba(236,240,243,.7);
-padding:40px 25px;
-border-radius:30px;
+background:rgba(236,240,243,.8);
+padding:45px 30px;
+border-radius:35px;
 box-shadow:var(--neu-shadow);
+text-align:left;
 }
 
 .card h3{
@@ -147,170 +218,191 @@ font-size:26px;
 margin-bottom:10px;
 }
 
-/* SELECT */
-select{
+/* CONTACT */
+input,textarea{
 width:100%;
 padding:14px;
 border:none;
 border-radius:15px;
 box-shadow:var(--neu-inset);
 background:var(--milk);
+margin-top:12px;
 }
 
 /* CTA */
 .cta{
 background:black;
 color:white;
-border-radius:50px;
-padding:100px 30px;
-margin-top:100px;
-}
-
-.cta button{
-margin-top:30px;
-padding:16px 40px;
-border-radius:25px;
-border:none;
-font-weight:700;
-cursor:pointer;
+border-radius:60px;
+padding:120px 30px;
+margin-top:120px;
 }
 
 /* FOOTER */
 footer{
 background:#e0e5e9;
-padding:80px 20px 40px;
-border-radius:50px 50px 0 0;
-margin-top:120px;
+padding:90px 20px 40px;
+border-radius:60px 60px 0 0;
+margin-top:140px;
 }
 </style>
 </head>
 
 <body>
 
+<div id="canvas-container"></div>
+
+<!-- LOGIN -->
+<div id="loginOverlay">
+  <form class="login-box" onsubmit="unlock(event)">
+    <h2>VAI GROUP</h2>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Password" required>
+    <button>ENTER SHORTCLIPS</button>
+  </form>
+</div>
+
 <nav>
-<div class="logo">ClipEngine.</div>
+<div class="logo">ShortClips</div>
 <div class="nav-links">
 <a href="#features">Features</a>
-<a href="#workflow">Workflow</a>
-<a href="#pricing">Pricing</a>
+<a href="#about">About</a>
+<a href="#support">Support</a>
+<a href="#contact">Contact</a>
 </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero reveal">
-<h1>Automate<br>Viral Growth.</h1>
-<p style="opacity:.6;margin-bottom:40px">
-Upload a video or paste a link — we do the rest.
-</p>
+<h1>Turn Long Videos<br>Into Viral Shorts.</h1>
+<p style="opacity:.6">AI-powered clipping by VAI Group.</p>
 
 <div class="main-input-box">
-<input id="videoLink" placeholder="https://youtube.com/watch?v=...">
-<button onclick="goToCustomize()">Continue</button>
+<input placeholder="Paste YouTube link here">
+<button>Continue</button>
 </div>
 
 <div class="upload-box" id="uploadBox">
 <p><b>Drag & Drop Video</b></p>
-<p style="opacity:.6;font-size:14px">MP4 / MOV</p>
-<input type="file" id="videoInput" accept="video/*" hidden>
+<p style="font-size:14px;opacity:.6">MP4 / MOV • Max 2GB</p>
+<input type="file" id="videoInput" hidden>
 <button onclick="videoInput.click()">Browse File</button>
 </div>
 </section>
 
-<!-- FEATURES -->
 <section id="features" class="reveal">
-<h2 style="font-family:'Syne';font-size:42px">Why ClipEngine?</h2>
-<div class="grid-4">
-<div class="card"><h3>AI Hooks</h3><p>Find viral moments instantly</p></div>
-<div class="card"><h3>Auto Captions</h3><p>High-retention subtitles</p></div>
-<div class="card"><h3>Multi Platform</h3><p>Reels, Shorts, TikTok</p></div>
-<div class="card"><h3>4K Export</h3><p>Studio quality output</p></div>
+<h2>Features</h2>
+<div class="grid-3">
+<div class="card"><h3>AI Hooks</h3><p>Detects viral moments.</p></div>
+<div class="card"><h3>Auto Captions</h3><p>High-retention subtitles.</p></div>
+<div class="card"><h3>Multi Export</h3><p>TikTok, Reels, Shorts.</p></div>
 </div>
 </section>
 
-<!-- WORKFLOW -->
-<section id="workflow" class="reveal">
-<h2 style="font-family:'Syne';font-size:42px">How It Works</h2>
-<div class="grid-4">
-<div class="card"><h3>1</h3><p>Upload or paste link</p></div>
-<div class="card"><h3>2</h3><p>Customize clips</p></div>
-<div class="card"><h3>3</h3><p>AI processes video</p></div>
-<div class="card"><h3>4</h3><p>Download & post</p></div>
+<section id="about" class="reveal">
+<h2>About VAI Group</h2>
+<p style="max-width:720px;margin:30px auto">
+VAI Group builds intelligent automation tools for creators.
+ShortClips helps scale content effortlessly.
+</p>
+</section>
+
+<section id="support" class="reveal">
+<h2>Support</h2>
+<div class="grid-3">
+<div class="card"><h3>Help Center</h3><p>Guides & FAQs.</p></div>
+<div class="card"><h3>Status</h3><p>Live uptime monitoring.</p></div>
+<div class="card"><h3>Contact</h3><p>Technical assistance.</p></div>
 </div>
 </section>
 
-<!-- CUSTOMIZATION -->
-<section id="customize" style="display:none">
-<h2 style="font-family:'Syne';font-size:48px">Customize Clips</h2>
-
-<div class="grid-4">
-<div class="card">
-<h3>Clip Length</h3>
-<select><option>15s</option><option>30s</option><option>60s</option></select>
-</div>
-
-<div class="card">
-<h3>Aspect Ratio</h3>
-<select><option>9:16</option><option>1:1</option><option>16:9</option></select>
-</div>
-
-<div class="card">
-<h3>Captions</h3>
-<select><option>Bold</option><option>Minimal</option></select>
-</div>
-
-<div class="card">
-<h3>Platform</h3>
-<select><option>TikTok</option><option>Reels</option><option>Shorts</option></select>
-</div>
-</div>
-
-<button class="main-input-box" style="margin-top:50px;justify-content:center">
-Generate Clips
+<section id="contact" class="reveal">
+<h2>Contact Us</h2>
+<div style="max-width:600px;margin:40px auto">
+<input placeholder="Name">
+<input placeholder="Email">
+<textarea rows="4" placeholder="Message"></textarea>
+<button style="margin-top:20px;padding:16px 40px;border-radius:25px;border:none;background:black;color:white">
+Send Message
 </button>
+</div>
 </section>
 
-<!-- CTA -->
 <section class="cta reveal">
-<h2 style="font-family:'Syne';font-size:48px">
-Ready to Go Viral?
-</h2>
-<p style="opacity:.7">Start creating clips in seconds.</p>
-<button>Get Started</button>
+<h2>Start Creating Viral Shorts</h2>
+<p style="opacity:.7">No editing required.</p>
 </section>
 
 <footer>
-<p style="opacity:.6;font-size:13px;text-align:center">
-© 2026 Vaivaanith Holding. All rights reserved.
+<p style="text-align:center;font-size:12px;opacity:.5">
+© 2026 VAI Group. All rights reserved.
 </p>
 </footer>
 
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
-/* reveal */
+/* LOGIN */
+function unlock(e){
+e.preventDefault();
+document.getElementById("loginOverlay").style.display="none";
+}
+
+/* REVEAL */
 const obs=new IntersectionObserver(e=>{
 e.forEach(x=>x.isIntersecting&&x.target.classList.add("active"))
 });
 document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
 
-/* upload */
-const uploadBox=document.getElementById("uploadBox");
-const videoInput=document.getElementById("videoInput");
+/* 3D BUBBLES */
+const container=document.getElementById("canvas-container");
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+container.appendChild(renderer.domElement);
 
-uploadBox.addEventListener("dragover",e=>{
-e.preventDefault();uploadBox.classList.add("dragover");
-});
-uploadBox.addEventListener("dragleave",()=>uploadBox.classList.remove("dragover"));
-uploadBox.addEventListener("drop",e=>{
-e.preventDefault();uploadBox.classList.remove("dragover");
-goToCustomize();
-});
-videoInput.addEventListener("change",()=>goToCustomize());
+const spheres=[];
+const geo=new THREE.SphereGeometry(1,32,32);
 
-/* SPA switch */
-function goToCustomize(){
-document.querySelectorAll("section").forEach(s=>s.style.display="none");
-document.getElementById("customize").style.display="block";
-window.scrollTo({top:0,behavior:"smooth"});
+for(let i=0;i<15;i++){
+const mat=new THREE.MeshPhongMaterial({
+color:0xffffff,
+transparent:true,
+opacity:.15,
+shininess:100
+});
+const s=new THREE.Mesh(geo,mat);
+s.position.set((Math.random()-.5)*15,(Math.random()-.5)*15,(Math.random()-.5)*10);
+const scale=Math.random()*2+.5;
+s.scale.set(scale,scale,scale);
+scene.add(s);
+spheres.push({
+mesh:s,
+vel:new THREE.Vector3((Math.random()-.5)*.01,(Math.random()-.5)*.01,0)
+});
 }
+
+scene.add(new THREE.DirectionalLight(0xffffff,1));
+scene.add(new THREE.AmbientLight(0xffffff,.6));
+camera.position.z=8;
+
+function animate(){
+requestAnimationFrame(animate);
+spheres.forEach(b=>{
+b.mesh.position.add(b.vel);
+if(Math.abs(b.mesh.position.x)>8)b.vel.x*=-1;
+if(Math.abs(b.mesh.position.y)>5)b.vel.y*=-1;
+});
+renderer.render(scene,camera);
+}
+animate();
+
+addEventListener("resize",()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
 </script>
 
 </body>
