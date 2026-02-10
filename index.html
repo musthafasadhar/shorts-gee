@@ -1,309 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shortscr.  ecosystem</title
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClipEngine | Vaivaanith Ecosystem</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --milk: #ecf0f3; 
-      --charcoal: #1a1a1a;
-      --neu-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
-      --neu-inset: inset 6px 6px 12px #cbced1, inset -6px -6px 12px #ffffff;
-    }
+<style>
+:root{
+--milk:#ecf0f3;
+--charcoal:#1a1a1a;
+--neu-shadow:14px 14px 20px #cbced1,-14px -14px 20px #fff;
+--neu-inset:inset 6px 6px 12px #cbced1,inset -6px -6px 12px #fff;
+}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+background:var(--milk);
+font-family:'Inter',sans-serif;
+color:var(--charcoal);
+overflow-x:hidden;
+}
 
-    body {
-      background-color: var(--milk);
-      color: var(--charcoal);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-    }
+section{
+padding:120px 20px;
+max-width:1100px;
+margin:auto;
+text-align:center;
+}
 
-    /* --- 3D CANVAS STYLING --- */
-    #canvas-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1; /* Sits behind everything */
-      pointer-events: none;
-    }
+.reveal{opacity:0;transform:translateY(30px);transition:.8s}
+.reveal.active{opacity:1;transform:none}
 
-    /* --- ANIMATION CLASS --- */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s ease-out;
-    }
+/* NAV */
+nav{
+position:fixed;top:20px;left:50%;
+transform:translateX(-50%);
+width:90%;max-width:1000px;
+padding:15px 30px;
+background:rgba(236,240,243,.5);
+backdrop-filter:blur(15px);
+border-radius:50px;
+display:flex;justify-content:space-between;
+z-index:1000;
+}
 
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.logo{font-family:'Syne';font-size:20px;font-weight:800}
+.nav-links a{
+margin-left:20px;
+text-decoration:none;
+color:black;
+font-size:12px;
+font-weight:600;
+}
 
-    /* --- NAVIGATION --- */
-    nav {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 1000px;
-      padding: 15px 30px;
-      background: rgba(236, 240, 243, 0.4); /* More transparent for 3D visibility */
-      backdrop-filter: blur(15px);
-      border-radius: 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
+/* HERO */
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
 
-    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
-    .nav-links a { text-decoration: none; color: var(--charcoal); font-size: 13px; margin-left: 20px; font-weight: 600; text-transform: uppercase; }
+.hero h1{
+font-family:'Syne';
+font-size:clamp(45px,9vw,90px);
+line-height:.85;
+margin-bottom:30px;
+}
 
-    /* --- MANDATORY LOGIN --- */
-    #loginOverlay {
-      position: fixed; inset: 0; z-index: 2000;
-      background: rgba(236, 240, 243, 0.6);
-      backdrop-filter: blur(25px);
-      display: flex; align-items: center; justify-content: center;
-    }
+/* INPUTS */
+.main-input-box{
+background:var(--milk);
+padding:10px;
+border-radius:25px;
+box-shadow:var(--neu-shadow);
+display:flex;
+max-width:600px;
+margin:auto;
+}
 
-    .login-container {
-      width: 360px; padding: 40px; background: var(--milk); border-radius: 40px; box-shadow: var(--neu-shadow); text-align: center;
-    }
+.main-input-box input{
+flex:1;
+border:none;
+background:transparent;
+padding:15px;
+font-size:16px;
+outline:none;
+}
 
-    .brand-logo { height: 80px; width: 80px; background: url("https://img.icons8.com/color/100/000000/twitter--v2.png") center/cover; margin: 0 auto 15px; border-radius: 50%; box-shadow: 7px 7px 10px #cbced1, -7px -7px 10px white; }
-    
-    .inputs input { width: 100%; background: var(--milk); border: none; padding: 15px; border-radius: 15px; box-shadow: var(--neu-inset); outline: none; caret-color: red; margin-bottom: 15px; }
-    
-    .login-btn { width: 100%; background: var(--charcoal); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.main-input-box button{
+background:black;
+color:white;
+border:none;
+padding:0 30px;
+border-radius:18px;
+cursor:pointer;
+}
 
-    /* --- CONTENT --- */
-    .content-blur { filter: blur(15px); pointer-events: none; }
+/* UPLOAD */
+.upload-box{
+max-width:600px;
+margin:40px auto;
+padding:50px;
+border-radius:35px;
+background:rgba(236,240,243,.7);
+box-shadow:var(--neu-shadow);
+border:2px dashed rgba(0,0,0,.15);
+transition:.3s;
+}
 
-    section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; text-align: center; }
+.upload-box.dragover{
+border-color:black;
+transform:scale(1.02);
+}
 
-    .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(40px, 8vw, 90px); line-height: 0.8; letter-spacing: -4px; margin-bottom: 30px; }
+.upload-box button{
+margin-top:20px;
+padding:14px 30px;
+border-radius:20px;
+border:none;
+background:black;
+color:white;
+cursor:pointer;
+}
 
-    .main-input-box { background: var(--milk); padding: 10px; border-radius: 25px; box-shadow: var(--neu-shadow); display: flex; width: 100%; max-width: 600px; margin: 0 auto; backdrop-filter: blur(5px); }
-    .main-input-box input { flex: 1; border: none; background: transparent; padding: 15px; outline: none; font-size: 16px; }
-    .main-input-box button { background: var(--charcoal); color: white; border: none; padding: 0 30px; border-radius: 18px; cursor: pointer; font-weight: 600; }
+/* GRID */
+.grid-4{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:30px;
+margin-top:50px;
+}
 
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-top: 50px; }
-    .card { background: rgba(236, 240, 243, 0.7); padding: 40px 20px; border-radius: 30px; box-shadow: var(--neu-shadow); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
-    .card h3 { font-family: 'Syne', sans-serif; font-size: 32px; margin-bottom: 5px; }
+.card{
+background:rgba(236,240,243,.7);
+padding:40px 25px;
+border-radius:30px;
+box-shadow:var(--neu-shadow);
+}
 
-    /* Pricing/FAQ/Footer CSS remains the same as your provided code */
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
-    .price-card { padding: 50px; border-radius: 40px; box-shadow: var(--neu-shadow); background: rgba(236, 240, 243, 0.7); backdrop-filter: blur(10px); }
-    .price { font-size: 48px; font-weight: 900; margin: 20px 0; }
-    footer { background: #e0e5e9; padding: 80px 20px 40px; margin-top: 100px; border-radius: 50px 50px 0 0; }
-    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: left; }
-    .footer-bottom { border-top: 1px solid #cbced1; margin-top: 60px; padding-top: 30px; font-size: 12px; opacity: 0.5; text-align: center; }
-  </style>
+.card h3{
+font-family:'Syne';
+font-size:26px;
+margin-bottom:10px;
+}
+
+/* SELECT */
+select{
+width:100%;
+padding:14px;
+border:none;
+border-radius:15px;
+box-shadow:var(--neu-inset);
+background:var(--milk);
+}
+
+/* CTA */
+.cta{
+background:black;
+color:white;
+border-radius:50px;
+padding:100px 30px;
+margin-top:100px;
+}
+
+.cta button{
+margin-top:30px;
+padding:16px 40px;
+border-radius:25px;
+border:none;
+font-weight:700;
+cursor:pointer;
+}
+
+/* FOOTER */
+footer{
+background:#e0e5e9;
+padding:80px 20px 40px;
+border-radius:50px 50px 0 0;
+margin-top:120px;
+}
+</style>
 </head>
+
 <body>
 
-  <div id="canvas-container"></div>
+<nav>
+<div class="logo">ClipEngine.</div>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="#workflow">Workflow</a>
+<a href="#pricing">Pricing</a>
+</div>
+</nav>
 
-  <div id="loginOverlay">
-    <div class="login-container">
-      <div class="brand-logo"></div>
-      <h2 style="font-family: 'Poppins'; font-weight: 900; margin-bottom: 20px;">VAIVAANITH</h2>
-      <form onsubmit="unlock(event)">
-        <div class="inputs">
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-          <button type="submit" class="login-btn">ENTER ECOSYSTEM</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<!-- HERO -->
+<section class="hero reveal">
+<h1>Automate<br>Viral Growth.</h1>
+<p style="opacity:.6;margin-bottom:40px">
+Upload a video or paste a link — we do the rest.
+</p>
 
-  <div id="mainWrapper" class="content-blur">
-    <nav>
-      <div class="logo">ClipEngine.</div>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-        <a href="#" onclick="location.reload()">Exit</a>
-      </div>
-    </nav>
+<div class="main-input-box">
+<input id="videoLink" placeholder="https://youtube.com/watch?v=...">
+<button onclick="goToCustomize()">Continue</button>
+</div>
 
-    <section class="hero reveal">
-      <h1>Automate<br>Viral Growth.</h1>
-      <p style="margin-bottom: 40px; opacity: 0.6;">One link. Ten clips. Zero effort.</p>
-      <div class="main-input-box">
-        <input type="text" placeholder="https://youtube.com/watch?v=...">
-        <button>Generate</button>
-      </div>
-    </section>
+<div class="upload-box" id="uploadBox">
+<p><b>Drag & Drop Video</b></p>
+<p style="opacity:.6;font-size:14px">MP4 / MOV</p>
+<input type="file" id="videoInput" accept="video/*" hidden>
+<button onclick="videoInput.click()">Browse File</button>
+</div>
+</section>
 
-    <section class="reveal" id="features">
-      <div class="grid-4">
-        <div class="card"><h3>24K+</h3><p>Users</p></div>
-        <div class="card"><h3>1.2M</h3><p>Videos</p></div>
-        <div class="card"><h3>99%</h3><p>Uptime</p></div>
-        <div class="card"><h3>24/7</h3><p>Support</p></div>
-      </div>
-    </section>
+<!-- FEATURES -->
+<section id="features" class="reveal">
+<h2 style="font-family:'Syne';font-size:42px">Why ClipEngine?</h2>
+<div class="grid-4">
+<div class="card"><h3>AI Hooks</h3><p>Find viral moments instantly</p></div>
+<div class="card"><h3>Auto Captions</h3><p>High-retention subtitles</p></div>
+<div class="card"><h3>Multi Platform</h3><p>Reels, Shorts, TikTok</p></div>
+<div class="card"><h3>4K Export</h3><p>Studio quality output</p></div>
+</div>
+</section>
 
-    <section id="pricing" class="reveal">
-        <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">Simple Pricing</h2>
-        <div class="pricing-grid">
-          <div class="price-card">
-            <h4>Creator</h4>
-            <div class="price">$0</div>
-            <p>5 Videos / Month</p>
-            <button class="login-btn" style="margin-top:20px">Current Plan</button>
-          </div>
-          <div class="price-card" style="box-shadow: var(--neu-inset);">
-            <h4>Pro</h4>
-            <div class="price">$29</div>
-            <p>Unlimited Generation</p>
-            <button class="login-btn" style="margin-top:20px; background: white; color: black;">Upgrade</button>
-          </div>
-        </div>
-      </section>
-  
-      <section id="faq" class="reveal">
-        <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">FAQ</h2>
-        <div class="card" style="text-align: left; margin-bottom: 20px;">
-          <p><b>Is this powered by AI?</b><br>Yes, we use the Vaivaanith proprietary engine to detect viral hooks.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <p><b>Can I export in 4K?</b><br>Absolutely. Pro users get full resolution exports.</p>
-        </div>
-      </section>
-  
-      <footer>
-        <div class="footer-grid">
-          <div class="footer-col">
-            <div class="logo" style="margin-bottom: 20px;">ClipEngine.</div>
-            <p style="font-size: 14px; opacity: 0.7;">The ultimate content repurposing tool for the modern creator.</p>
-          </div>
-          <div class="footer-col">
-            <h4>Product</h4>
-            <ul><li>Ai Clipping</li><li>Auto Captions</li></ul>
-          </div>
-          <div class="footer-col">
-            <h4>Company</h4>
-            <ul><li>About Vaivaanith</li><li>Privacy Policy</li></ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          &copy; 2026 Vaivaanith Holding & Parent Company. All Rights Reserved.
-        </div>
-      </footer>
-  </div>
+<!-- WORKFLOW -->
+<section id="workflow" class="reveal">
+<h2 style="font-family:'Syne';font-size:42px">How It Works</h2>
+<div class="grid-4">
+<div class="card"><h3>1</h3><p>Upload or paste link</p></div>
+<div class="card"><h3>2</h3><p>Customize clips</p></div>
+<div class="card"><h3>3</h3><p>AI processes video</p></div>
+<div class="card"><h3>4</h3><p>Download & post</p></div>
+</div>
+</section>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
-  <script>
-    /* --- THREE.JS 3D BUBBLE LOGIC --- */
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+<!-- CUSTOMIZATION -->
+<section id="customize" style="display:none">
+<h2 style="font-family:'Syne';font-size:48px">Customize Clips</h2>
 
-    // Create Bubbles (Spheres)
-    const spheres = [];
-    const geometry = new THREE.SphereGeometry(1, 32, 32);
-    
-    for (let i = 0; i < 15; i++) {
-      // Soft Glassy Material
-      const material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.15,
-        shininess: 100,
-        specular: 0xffffff
-      });
-      
-      const sphere = new THREE.Mesh(geometry, material);
-      
-      // Random positioning
-      sphere.position.x = (Math.random() - 0.5) * 15;
-      sphere.position.y = (Math.random() - 0.5) * 15;
-      sphere.position.z = (Math.random() - 0.5) * 10;
-      
-      // Random size
-      const scale = Math.random() * 2 + 0.5;
-      sphere.scale.set(scale, scale, scale);
-      
-      scene.add(sphere);
-      spheres.push({
-        mesh: sphere,
-        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, 0)
-      });
-    }
+<div class="grid-4">
+<div class="card">
+<h3>Clip Length</h3>
+<select><option>15s</option><option>30s</option><option>60s</option></select>
+</div>
 
-    // Lighting
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5).normalize();
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+<div class="card">
+<h3>Aspect Ratio</h3>
+<select><option>9:16</option><option>1:1</option><option>16:9</option></select>
+</div>
 
-    camera.position.z = 8;
+<div class="card">
+<h3>Captions</h3>
+<select><option>Bold</option><option>Minimal</option></select>
+</div>
 
-    // Animation Loop
-    function animate() {
-      requestAnimationFrame(animate);
-      
-      spheres.forEach(s => {
-        s.mesh.position.add(s.velocity);
-        s.mesh.rotation.y += 0.002;
-        
-        // Bounce off invisible boundaries
-        if (Math.abs(s.mesh.position.x) > 8) s.velocity.x *= -1;
-        if (Math.abs(s.mesh.position.y) > 5) s.velocity.y *= -1;
-      });
+<div class="card">
+<h3>Platform</h3>
+<select><option>TikTok</option><option>Reels</option><option>Shorts</option></select>
+</div>
+</div>
 
-      renderer.render(scene, camera);
-    }
-    animate();
+<button class="main-input-box" style="margin-top:50px;justify-content:center">
+Generate Clips
+</button>
+</section>
 
-    // Handle Resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+<!-- CTA -->
+<section class="cta reveal">
+<h2 style="font-family:'Syne';font-size:48px">
+Ready to Go Viral?
+</h2>
+<p style="opacity:.7">Start creating clips in seconds.</p>
+<button>Get Started</button>
+</section>
 
-    /* --- ORIGINAL SITE LOGIC --- */
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add('active');
-      });
-    }, { threshold: 0.1 });
+<footer>
+<p style="opacity:.6;font-size:13px;text-align:center">
+© 2026 Vaivaanith Holding. All rights reserved.
+</p>
+</footer>
 
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+<script>
+/* reveal */
+const obs=new IntersectionObserver(e=>{
+e.forEach(x=>x.isIntersecting&&x.target.classList.add("active"))
+});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
 
-    function unlock(e) {
-      e.preventDefault();
-      document.getElementById('loginOverlay').style.transition = "0.5s ease";
-      document.getElementById('loginOverlay').style.opacity = "0";
-      setTimeout(() => {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainWrapper').classList.remove('content-blur');
-      }, 500);
-    }
-  </script>
+/* upload */
+const uploadBox=document.getElementById("uploadBox");
+const videoInput=document.getElementById("videoInput");
+
+uploadBox.addEventListener("dragover",e=>{
+e.preventDefault();uploadBox.classList.add("dragover");
+});
+uploadBox.addEventListener("dragleave",()=>uploadBox.classList.remove("dragover"));
+uploadBox.addEventListener("drop",e=>{
+e.preventDefault();uploadBox.classList.remove("dragover");
+goToCustomize();
+});
+videoInput.addEventListener("change",()=>goToCustomize());
+
+/* SPA switch */
+function goToCustomize(){
+document.querySelectorAll("section").forEach(s=>s.style.display="none");
+document.getElementById("customize").style.display="block";
+window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+
 </body>
 </html>
