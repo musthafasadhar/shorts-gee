@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipEngine | Vaivaanith Ecosystem</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div id="loginOverlay">
+    <div class="login-container">
+      <div class="brand-logo"></div>
+      <h2 style="font-family: 'Poppins'; font-weight: 900; margin-bottom: 20px;">VAIVAANITH</h2>
+      <form onsubmit="unlock(event)">
+        <div class="inputs">
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          <button type="submit" class="login-btn">ENTER ECOSYSTEM</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="mainWrapper" class="content-blur">
+    <nav>
+      <div class="logo">Glowvai.</div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#" onclick="location.reload()">Exit</a>
+      </div>
+    </nav>
+
+    <section class="hero reveal">
+      <h1>Automate<br>replace editors.</h1>
+      <p style="margin-bottom: 40px; opacity: 0.6;">One link. Ten clips. Zero effort.</p>
+      <div class="main-input-box">
+        <input type="text" placeholder="https://youtube.com/watch?v=...">
+        <button>Generate</button>
+      </div>
+    </section>
+
+    <section class="reveal" id="features">
+      <div class="grid-4">
+        <div class="card"><h3>24K+</h3><p>Active Users</p></div>
+        <div class="card"><h3>1.2M</h3><p>Clips Generated</p></div>
+        <div class="card"><h3>99%</h3><p>AI Accuracy</p></div>
+        <div class="card"><h3>24/7</h3><p>Support</p></div>
+      </div>
+    </section>
+
+    <section id="pricing" class="reveal">
+      <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">Simple Pricing</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h4>Creator</h4>
+          <div class="price">$0</div>
+          <p>5 Videos / Month</p>
+          <button class="login-btn" style="margin-top:20px">Current Plan</button>
+        </div>
+        <div class="price-card" style="box-shadow: var(--neu-inset);">
+          <h4>Pro</h4>
+          <div class="price">$29</div>
+          <p>Unlimited Generation</p>
+          <button class="login-btn" style="margin-top:20px; background: white; color: black;">Upgrade</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="reveal">
+      <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">FAQ</h2>
+      <div class="card" style="text-align: left; margin-bottom: 20px;">
+        <p><b>Is this powered by AI?</b><br>Yes, we use the Vaivaanith proprietary engine to detect viral hooks.</p>
+      </div>
+      <div class="card" style="text-align: left;">
+        <p><b>Can I export in 4K?</b><br>Absolutely. Pro users get full resolution exports.</p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo" style="margin-bottom: 20px;">ClipEngine.</div>
+          <p style="font-size: 14px; opacity: 0.7;">The ultimate content repurposing tool for the modern creator.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul><li>Ai Clipping</li><li>Auto Captions</li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul><li>About Vaivaanith</li><li>Privacy Policy</li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Vaivaanith Holding & Parent Company. All Rights Reserved.
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    /* --- THREE.JS 3D BUBBLE LOGIC --- */
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const spheres = [];
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    for (let i = 0; i < 15; i++) {
+      const material = new THREE.MeshPhongMaterial({
+        color: 0xffffff, transparent: true, opacity: 0.15, shininess: 100, specular: 0xffffff
+      });
+      const sphere = new THREE.Mesh(geometry, material);
+      sphere.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10);
+      const scale = Math.random() * 2 + 0.5;
+      sphere.scale.set(scale, scale, scale);
+      scene.add(sphere);
+      spheres.push({ mesh: sphere, velocity: new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, 0) });
+    }
+
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5, 5, 5).normalize();
+    scene.add(light, new THREE.AmbientLight(0xffffff, 0.5));
+    camera.position.z = 8;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      spheres.forEach(s => {
+        s.mesh.position.add(s.velocity);
+        if (Math.abs(s.mesh.position.x) > 8) s.velocity.x *= -1;
+        if (Math.abs(s.mesh.position.y) > 5) s.velocity.y *= -1;
+      });
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    /* --- SITE INTERACTION --- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    function unlock(e) {
+      e.preventDefault();
+      const overlay = document.getElementById('loginOverlay');
+      overlay.style.transition = "0.5s ease";
+      overlay.style.opacity = "0";
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('mainWrapper').classList.remove('content-blur');
+      }, 500);
+    }
+  </script>
+</body>
+</html>
