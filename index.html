@@ -4,10 +4,115 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClipEngine | Vaivaanith Ecosystem</title>
-  
+
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --milk: #ecf0f3; 
+      --charcoal: #1a1a1a;
+      --neu-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
+      --neu-inset: inset 6px 6px 12px #cbced1, inset -6px -6px 12px #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--milk);
+      color: var(--charcoal);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* --- 3D CANVAS STYLING --- */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Sits behind everything */
+      pointer-events: none;
+    }
+
+    /* --- ANIMATION CLASS --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- NAVIGATION --- */
+    nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 1000px;
+      padding: 15px 30px;
+      background: rgba(236, 240, 243, 0.4); /* More transparent for 3D visibility */
+      backdrop-filter: blur(15px);
+      border-radius: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
+    .nav-links a { text-decoration: none; color: var(--charcoal); font-size: 13px; margin-left: 20px; font-weight: 600; text-transform: uppercase; }
+
+    /* --- MANDATORY LOGIN --- */
+    #loginOverlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(236, 240, 243, 0.6);
+      backdrop-filter: blur(25px);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .login-container {
+      width: 360px; padding: 40px; background: var(--milk); border-radius: 40px; box-shadow: var(--neu-shadow); text-align: center;
+    }
+
+    .brand-logo { height: 80px; width: 80px; background: url("https://img.icons8.com/color/100/000000/twitter--v2.png") center/cover; margin: 0 auto 15px; border-radius: 50%; box-shadow: 7px 7px 10px #cbced1, -7px -7px 10px white; }
+    
+    .inputs input { width: 100%; background: var(--milk); border: none; padding: 15px; border-radius: 15px; box-shadow: var(--neu-inset); outline: none; caret-color: red; margin-bottom: 15px; }
+    
+    .login-btn { width: 100%; background: var(--charcoal); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+    /* --- CONTENT --- */
+    .content-blur { filter: blur(15px); pointer-events: none; }
+
+    section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; text-align: center; }
+
+    .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(40px, 8vw, 90px); line-height: 0.8; letter-spacing: -4px; margin-bottom: 30px; }
+
+    .main-input-box { background: var(--milk); padding: 10px; border-radius: 25px; box-shadow: var(--neu-shadow); display: flex; width: 100%; max-width: 600px; margin: 0 auto; backdrop-filter: blur(5px); }
+    .main-input-box input { flex: 1; border: none; background: transparent; padding: 15px; outline: none; font-size: 16px; }
+    .main-input-box button { background: var(--charcoal); color: white; border: none; padding: 0 30px; border-radius: 18px; cursor: pointer; font-weight: 600; }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-top: 50px; }
+    .card { background: rgba(236, 240, 243, 0.7); padding: 40px 20px; border-radius: 30px; box-shadow: var(--neu-shadow); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
+    .card h3 { font-family: 'Syne', sans-serif; font-size: 32px; margin-bottom: 5px; }
+
+    /* Pricing/FAQ/Footer CSS remains the same as your provided code */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+    .price-card { padding: 50px; border-radius: 40px; box-shadow: var(--neu-shadow); background: rgba(236, 240, 243, 0.7); backdrop-filter: blur(10px); }
+    .price { font-size: 48px; font-weight: 900; margin: 20px 0; }
+    footer { background: #e0e5e9; padding: 80px 20px 40px; margin-top: 100px; border-radius: 50px 50px 0 0; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: left; }
+    .footer-bottom { border-top: 1px solid #cbced1; margin-top: 60px; padding-top: 30px; font-size: 12px; opacity: 0.5; text-align: center; }
+  </style>
 </head>
 <body>
 
@@ -29,7 +134,7 @@
 
   <div id="mainWrapper" class="content-blur">
     <nav>
-      <div class="logo">Glowvai.</div>
+      <div class="logo">ClipEngine.</div>
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
@@ -39,7 +144,7 @@
     </nav>
 
     <section class="hero reveal">
-      <h1>Automate<br>replace editors.</h1>
+      <h1>Automate<br>Viral Growth.</h1>
       <p style="margin-bottom: 40px; opacity: 0.6;">One link. Ten clips. Zero effort.</p>
       <div class="main-input-box">
         <input type="text" placeholder="https://youtube.com/watch?v=...">
@@ -49,115 +154,153 @@
 
     <section class="reveal" id="features">
       <div class="grid-4">
-        <div class="card"><h3>24K+</h3><p>Active Users</p></div>
-        <div class="card"><h3>1.2M</h3><p>Clips Generated</p></div>
-        <div class="card"><h3>99%</h3><p>AI Accuracy</p></div>
+        <div class="card"><h3>24K+</h3><p>Users</p></div>
+        <div class="card"><h3>1.2M</h3><p>Videos</p></div>
+        <div class="card"><h3>99%</h3><p>Uptime</p></div>
         <div class="card"><h3>24/7</h3><p>Support</p></div>
       </div>
     </section>
 
     <section id="pricing" class="reveal">
-      <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">Simple Pricing</h2>
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h4>Creator</h4>
-          <div class="price">$0</div>
-          <p>5 Videos / Month</p>
-          <button class="login-btn" style="margin-top:20px">Current Plan</button>
+        <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">Simple Pricing</h2>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h4>Creator</h4>
+            <div class="price">$0</div>
+            <p>5 Videos / Month</p>
+            <button class="login-btn" style="margin-top:20px">Current Plan</button>
+          </div>
+          <div class="price-card" style="box-shadow: var(--neu-inset);">
+            <h4>Pro</h4>
+            <div class="price">$29</div>
+            <p>Unlimited Generation</p>
+            <button class="login-btn" style="margin-top:20px; background: white; color: black;">Upgrade</button>
+          </div>
         </div>
-        <div class="price-card" style="box-shadow: var(--neu-inset);">
-          <h4>Pro</h4>
-          <div class="price">$29</div>
-          <p>Unlimited Generation</p>
-          <button class="login-btn" style="margin-top:20px; background: white; color: black;">Upgrade</button>
+      </section>
+  
+      <section id="faq" class="reveal">
+        <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">FAQ</h2>
+        <div class="card" style="text-align: left; margin-bottom: 20px;">
+          <p><b>Is this powered by AI?</b><br>Yes, we use the Vaivaanith proprietary engine to detect viral hooks.</p>
         </div>
-      </div>
-    </section>
-
-    <section id="faq" class="reveal">
-      <h2 style="font-family: 'Syne'; font-size: 40px; margin-bottom: 50px;">FAQ</h2>
-      <div class="card" style="text-align: left; margin-bottom: 20px;">
-        <p><b>Is this powered by AI?</b><br>Yes, we use the Vaivaanith proprietary engine to detect viral hooks.</p>
-      </div>
-      <div class="card" style="text-align: left;">
-        <p><b>Can I export in 4K?</b><br>Absolutely. Pro users get full resolution exports.</p>
-      </div>
-    </section>
-
-    <footer>
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div class="logo" style="margin-bottom: 20px;">ClipEngine.</div>
-          <p style="font-size: 14px; opacity: 0.7;">The ultimate content repurposing tool for the modern creator.</p>
+        <div class="card" style="text-align: left;">
+          <p><b>Can I export in 4K?</b><br>Absolutely. Pro users get full resolution exports.</p>
         </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul><li>Ai Clipping</li><li>Auto Captions</li></ul>
+      </section>
+  
+      <footer>
+        <div class="footer-grid">
+          <div class="footer-col">
+            <div class="logo" style="margin-bottom: 20px;">ClipEngine.</div>
+            <p style="font-size: 14px; opacity: 0.7;">The ultimate content repurposing tool for the modern creator.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Product</h4>
+            <ul><li>Ai Clipping</li><li>Auto Captions</li></ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul><li>About Vaivaanith</li><li>Privacy Policy</li></ul>
+          </div>
         </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul><li>About Vaivaanith</li><li>Privacy Policy</li></ul>
+        <div class="footer-bottom">
+          &copy; 2026 Vaivaanith Holding & Parent Company. All Rights Reserved.
         </div>
-      </div>
-      <div class="footer-bottom">
-        &copy; 2026 Vaivaanith Holding & Parent Company. All Rights Reserved.
-      </div>
-    </footer>
+      </footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
   <script>
     /* --- THREE.JS 3D BUBBLE LOGIC --- */
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
+    // Create Bubbles (Spheres)
     const spheres = [];
     const geometry = new THREE.SphereGeometry(1, 32, 32);
+    
     for (let i = 0; i < 15; i++) {
+      // Soft Glassy Material
       const material = new THREE.MeshPhongMaterial({
-        color: 0xffffff, transparent: true, opacity: 0.15, shininess: 100, specular: 0xffffff
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.15,
+        shininess: 100,
+        specular: 0xffffff
       });
+      
       const sphere = new THREE.Mesh(geometry, material);
-      sphere.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10);
+      
+      // Random positioning
+      sphere.position.x = (Math.random() - 0.5) * 15;
+      sphere.position.y = (Math.random() - 0.5) * 15;
+      sphere.position.z = (Math.random() - 0.5) * 10;
+      
+      // Random size
       const scale = Math.random() * 2 + 0.5;
       sphere.scale.set(scale, scale, scale);
+      
       scene.add(sphere);
-      spheres.push({ mesh: sphere, velocity: new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, 0) });
+      spheres.push({
+        mesh: sphere,
+        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, 0)
+      });
     }
 
+    // Lighting
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 5, 5).normalize();
-    scene.add(light, new THREE.AmbientLight(0xffffff, 0.5));
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
     camera.position.z = 8;
 
+    // Animation Loop
     function animate() {
       requestAnimationFrame(animate);
+      
       spheres.forEach(s => {
         s.mesh.position.add(s.velocity);
+        s.mesh.rotation.y += 0.002;
+        
+        // Bounce off invisible boundaries
         if (Math.abs(s.mesh.position.x) > 8) s.velocity.x *= -1;
         if (Math.abs(s.mesh.position.y) > 5) s.velocity.y *= -1;
       });
+
       renderer.render(scene, camera);
     }
     animate();
 
-    /* --- SITE INTERACTION --- */
+    // Handle Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    /* --- ORIGINAL SITE LOGIC --- */
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+      });
     }, { threshold: 0.1 });
+
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
     function unlock(e) {
       e.preventDefault();
-      const overlay = document.getElementById('loginOverlay');
-      overlay.style.transition = "0.5s ease";
-      overlay.style.opacity = "0";
+      document.getElementById('loginOverlay').style.transition = "0.5s ease";
+      document.getElementById('loginOverlay').style.opacity = "0";
       setTimeout(() => {
-        overlay.style.display = 'none';
+        document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainWrapper').classList.remove('content-blur');
       }, 500);
     }
